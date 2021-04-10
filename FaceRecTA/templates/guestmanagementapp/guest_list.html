@@ -1,0 +1,102 @@
+<!doctype html>
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masatrek Guest List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <style media="screen">
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield; /* Firefox */
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <div class="container p-3 text-center">
+    <img src="https://i.ibb.co/BN7M0W3/Whats-App-Image-2019-09-16-at-11-30-13-AM.jpg" class="img-responsive shadow" height="70" alt="cbs" border="0">
+  </div>
+  <br>
+  <div class="container shadow border rounded p-3 text-center">
+    <p class="h2 text-center"><strong>Guest List</strong></p>
+    <button type="button" class="btn btn-sm btn-warning" onclick="window.location.href='/guestmanagement/'">Back</button>
+  </div>
+  <br>
+  <div class="container shadow border rounded p-3">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        {% if message.tags == "error" %}
+        <div class="alert alert-danger alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Error : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% if message.tags == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Success : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% if message.tags == "info" %}
+        <div class="alert alert-info alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Info : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="row">
+      <div class="col">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Picture</th>
+              <th scope="col">Name</th>
+              <th scope="col">Phone Number</th>
+              <th scope="col">NRIC</th>
+              <th scope="col">Comment</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for guest in guest_list %}
+            <tr>
+              <form action="/guestmanagement/guestlist/guest_list_proc/" method="POST">
+              {% csrf_token %}
+              <td>{{guest.id}}</td>
+              <td><img class="shadow rounded img-thumbnail" width="142" height="157" src="{% static guest.image_name %}" alt="myimg"></td>
+              <td>{{guest.name}}<br><button type="submit" class="btn btn-sm btn-danger" name="guest_id" value="{{guest.id}}">Delete Guest</button></td>
+              <td>{{guest.phone_number}}</td>
+              <td>{{guest.nric}}</td>
+              <td>{{guest.comment}}</td>
+              </form>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<!-- MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL -->
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>

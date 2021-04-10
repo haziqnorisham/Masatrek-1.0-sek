@@ -1,0 +1,141 @@
+<!doctype html>
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masatrek Admin Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <style media="screen">
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield; /* Firefox */
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <div class="container p-3 text-center">
+    <img src="https://i.ibb.co/BN7M0W3/Whats-App-Image-2019-09-16-at-11-30-13-AM.jpg" class="img-responsive shadow" height="70" alt="cbs" border="0">
+  </div>
+  <br>
+  <div class="container shadow border rounded p-3 text-center">
+    <p class="h2 text-center"><strong>Register New Guest</strong></p>
+    <button type="button" class="btn btn-sm btn-warning" onclick="window.location.href='/guestmanagement/'">Back</button>
+  </div>
+  <br>
+  <div class="container shadow border rounded p-3">
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        {% if message.tags == "error" %}
+        <div class="alert alert-danger alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Error : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% if message.tags == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Success : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="row">
+      <div class="col">
+      </div>
+      <div class="col">
+        <form method="POST" action="/guestmanagement/registerguest/register_guest_proc/">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="name">Name :</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" required="true">
+            <small id="name" class="form-text text-muted"></small>
+          </div>
+          <div class="form-group">
+            <label for="nric">NRIC : </label>
+            <input type="number" class="form-control" id="nric" name="nric" placeholder="Enter NRIC" required="true">
+            <small id="nric" class="form-text text-muted">Eg. 970417145366</small>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number : </label>
+            <input type="number" class="form-control" id="phone" name="phone" placeholder="Enter Phone Number" required="true">
+            <small id="phone" class="form-text text-muted">Eg. 019349255</small>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <button class="btn btn-info" type="button" data-toggle="modal" data-target="#image_select_modal">Select Image</button>
+              </div>
+                {% for img_req in image_requested %}
+                <input type="text" class="form-control" name="image_name" id="image_name" placeholder="Image Name" value="{{img_req.image_requested}}" readonly>
+                {% endfor %}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="comment">Comment : </label>
+            <textarea class="form-control" rows="3" id="comment" name="comment"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+  </div>
+
+<!-- MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL -->
+<div class="modal fade" id="image_select_modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Guest Image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% for image_name in image_names %}
+        <div class="container border">
+          <div class="row">
+            <div class="col-sm">
+              <img class="shadow rounded img-thumbnail" width="142" height="157" src="{% static image_name.name %}" alt="myimg">
+            </div>
+            <div class="col-sm">
+              <label>{{image_name.name}}</label>
+              <button type="button" class="btn btn-primary" id="{{image_name.name}}" onclick="image(this)" data-dismiss="modal">Select</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  function image(btn){
+    img_name_label = document.getElementById("image_name");
+    img_name_label.value = btn.id;
+  }
+</script>
+</body>

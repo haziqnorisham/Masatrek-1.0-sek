@@ -1,0 +1,186 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <title>User Registration</title>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="row pt-3">
+
+      <div class="col-sm"></div>
+
+      <div class="col-10 bg-light rounded border shadow">
+        <br>
+        {% if messages %}
+          <ul class="messages">
+              {% for message in messages %}
+              {% if message.tags == "error" %}
+              <div class="alert alert-danger alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+                <strong>Error : </strong> {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {% endif %}
+              {% if message.tags == "success" %}
+              <div class="alert alert-success alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+                <strong>Success : </strong> {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {% endif %}
+              {% endfor %}
+          </ul>
+        {% endif %}
+
+        <div class="text-center pt-3">
+          <img src="https://i.ibb.co/BN7M0W3/Whats-App-Image-2019-09-16-at-11-30-13-AM.jpg" class="img-responsive" height="50">
+          <h5>Employee List</h5>
+          <button type="button" class="btn btn-warning" onclick="home()">Home</button>
+        </div>
+        <br>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Employee ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Gender</th>
+              <th scope="col">Department</th>
+              <th scope="col">Picture</th>
+              {% if request.user.is_superuser %}
+              <th scope="col">Action</th>
+              {% else %}
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for employee in employee_list %}
+            <tr>
+              <td>{{employee.employee_id}}</td>
+              <td>{{employee.name}}</td>
+              <td>{{employee.gender}}</td>
+              <td>{{employee.department}}</td>
+              <td><img src="{% static employee.img_name %}" class="img-responsive" height="149" width="132"></td>
+
+              {% if request.user.is_superuser %}
+              <form class=""  method="POST" action="/administrator/employee_delete_process/">
+                {% csrf_token %}
+                  <td>
+                    <button type="submit" class="btn btn-danger pb-2" name="employee_id" value="{{employee.employee_id}}">Delete</button>                    
+                    <button type="button" class="btn btn-warning" name="employee_id" value="{{employee.employee_id}}" onclick="edit(this)" data-toggle="modal" data-target="#exampleModal">Edit</button>
+                  </td>
+              </form>
+              {% else %}
+              {% endif %}
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm"></div>
+
+    </div>
+  </div>
+  <!-- MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Employee</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">          
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <img class="shadow rounded mx-auto" width="142" height="157" src="" alt="myimg" id="modal_image" name="modal_image">  
+                </div>                
+              </div>
+              <div class="col-9">
+                <form method="POST" action="/administrator/update_employee/">
+                {% csrf_token %}
+                <div class="row pb-2">
+                  <label for="modal_name" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Employee ID</b></label>
+                  <div class="col-9 p-0">
+                    <input type="text" name="modal_id" class="form-control" value="" id="modal_id" readonly>
+                  </div>
+                </div>              
+                <div class="row pb-2">                  
+                  <label for="modal_name" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Name</b></label>                  
+                  <div class="col-9 p-0">
+                    <input type="text" name="modal_name" class="form-control" value="" id="modal_name">
+                  </div>        
+                </div>
+                <div class="row pb-2">                  
+                  <label for="modal_name" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Gender</b></label>                  
+                  <div class="col-9 p-0">
+                    <select class="form-control" name="modal_gender" id="modal_gender" value="" >
+                      <option value="0">Male</option>
+                      <option value="1">Female</option>
+                    </select>
+                  </div>        
+                </div>
+                <div class="row pb-2">
+
+                    <label for="modal_name" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Department</b></label>
+                    <div class="col-9 p-0">
+                      <input type="text" name="modal_department" class="form-control" value="" id="modal_department">
+                  </div>
+                </div>                              
+              </div>
+            </div>
+          </div>  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL-->
+  <script>
+    function home() {
+      location.replace("/administrator")
+    }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    function edit(btn){      
+
+      $.ajax({
+        url: '/administrator/ajax_edit_employee/',
+        data: {
+          'employee_id': btn.value
+        },
+        dataType: 'json',
+        success: function (data) {
+          var image_name = "/static/";
+          document.getElementById("modal_image").src = image_name.concat(data.image_name);
+          document.getElementById("modal_name").value = data.name;
+          document.getElementById("modal_gender").value = data.gender;
+          document.getElementById("modal_department").value = data.department;
+          document.getElementById("modal_id").value = data.id;
+        },
+      });
+
+    }
+  </script>
+</body>
+</html>

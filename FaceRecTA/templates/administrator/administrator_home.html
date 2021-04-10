@@ -1,0 +1,144 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masatrek Admin Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+  <br>
+  <div class="container">
+
+    <div class="row text-center">
+      <div class="col-sm"></div>
+      <div class="col-sm">
+        <img src="https://i.ibb.co/BN7M0W3/Whats-App-Image-2019-09-16-at-11-30-13-AM.jpg" class="img-responsive" height="70"  alt="cbs" border="0">
+      </div>
+      <div class="col-sm"></div>
+    </div>
+
+    <hr>
+
+    <div class="row text-center">
+      <div class="col-sm">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            {% if message.tags == "error" %}
+            <div class="alert alert-danger alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+              <strong>Error : </strong> {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endif %}
+            {% if message.tags == "success" %}
+            <div class="alert alert-success alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+              <strong>Success : </strong> {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </ul>
+      {% endif %}
+        <h3>Welcome, Masatrek Employee Management</h3>
+        <br>
+        <button type="button" class="btn btn-sm btn-warning" onclick="window.location.href='/guestmanagement/'">Guest Management</button>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row p-2">
+        <div class="col-sm"></div>
+        {% if request.user.is_superuser %}
+        <div class="col-sm text-right"><button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/registration'">Register User</button></div>
+        {% else %}
+        <div class="col-sm text-right"><button type="button" class="btn btn-block btn-secondary" disabled>Register User</button></div>
+        {% endif %}
+        <div class="col-sm text-center"><button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/time_attendance/btnAction'">Time Attendance</button></div>
+        {% if request.user.is_superuser %}
+        <div class="col-sm text-left"><button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/add_device'">Add Device</button></div>
+        {% else %}
+        <div class="col-sm text-left"><button type="button" class="btn btn-block btn-secondary" disabled>Add Device</button></div>
+        {% endif %}
+
+
+        <div class="col-sm"></div>
+    </div>
+
+    <div class="row p-2">
+      <div class="col-sm"></div>
+
+      <div class="col-sm text-right">
+          <button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/employee_list'">Students/Staff List</button>
+      </div>
+
+      <div class="col-sm text-center">
+        {% if request.user.is_superuser %}
+        <!-- <button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/time_attendance/stranger'">Visitor's Record</button> -->
+        <button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/login_list'">Login Accounts</button>
+        {% endif %}
+      </div>
+
+      <div class="col-sm">
+        {% if request.user.is_superuser %}
+        <button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/employee_add'"">Reg. Students/Staff</button>
+        {% else %}
+        <button type="button" class="btn btn-block btn-secondary" disabled>Reg. Employee</button>
+        {% endif %}
+      </div>
+      <div class="col-sm"></div>
+    </div>
+
+    <div class="row pt-3">
+      <div class="col-sm"></div>
+        <a href="{% url 'logout' %}?next=/">
+          <button type="button" class="btn btn-block btn-danger" >Logout</button>
+        </a>
+      <div class="col-sm"></div>
+    </div>
+
+    <div class="row pt-3">
+      <div class="col-sm"></div>
+    <div class="col-sm border shadow rounded">
+      <h4>Connected Device</h4>
+      <hr>
+      {% if request.user.is_superuser %}
+      <form id="ip_form" method="GET" action="/administrator/Sync/">
+        <div class="form-group ">
+          {% for terminal_dict in terminal_dict_list %}
+          {% if terminal_dict.terminal_id == 0 %}
+          {% else %}
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="defaultCheck1" name="{{terminal_dict.counter}}" value="{{terminal_dict.terminal_ip}}">
+            <label class="form-check-label" for="defaultCheck1">{{terminal_dict.terminal_name}}</label>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        <!--
+        <button type="hidden" name="sync" value="sync" class="btn btn-block btn-success" onclick="window.location.href='/administrator/Sync'"">Synchronize Device</button>
+        -->
+        <button type="submit" name="delete" value="delete" class="btn btn-block btn-danger" onclick="window.location.href='/administrator/Sync'"">Delete Device</button>
+      </form>
+      {% else %}
+      <form>
+        <div class="form-group ">
+          <div class="form-check">
+          </div>
+        </div>
+        <button type="submit" name="sync" value="sync" class="btn btn-block btn-secondary" disabled>Synchronize Device</button>
+        <button type="submit" name="delete" value="delete" class="btn btn-block btn-secondary" disabled>Delete Device</button>
+      </form>
+      {% endif %}
+    </div>
+    <div class="col-sm"></div>
+    </div>
+
+  </div>
+</body>

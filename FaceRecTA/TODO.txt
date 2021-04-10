@@ -1,0 +1,16 @@
+## DO THIS FIRST BEFORE SUNDAY ##
+  1.  Rearrangement of table content in deviceDetails.html broke JavaScript that is
+      used for search filter.
+
+  2.   Need to add search filter by department and branch.
+
+## NEED TO BE DONE ON MONDAY ##
+  3.  Changes to database structure may break connection between terminal and server.
+      Check and verify all connection made to and from the face terminal
+
+  4.  Sync function can only add employee entry to the face terminal. Removal of deleted
+      in the Django server does not remove the entry in the face terminal. Need to
+      implement this.
+ 
+## DO AFTER COMPLETED TWO ABOVE TASK ##
+  5.  Make sure that all function is working correctly and smoothly without any issues.

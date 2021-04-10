@@ -1,0 +1,9 @@
+venv/
+.vscode/
+*.exe
+*.pyc
+*.jpg
+!haziq.jpg
+*.sqlite3
+*.old
+manage.spec

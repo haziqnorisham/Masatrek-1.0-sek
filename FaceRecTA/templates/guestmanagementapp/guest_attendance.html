@@ -1,0 +1,214 @@
+<!doctype html>
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masatrek Guest Attendance</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <style media="screen">
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield; /* Firefox */
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <div class="container p-3 text-center">
+    <img src="https://i.ibb.co/BN7M0W3/Whats-App-Image-2019-09-16-at-11-30-13-AM.jpg" class="img-responsive shadow" height="70" alt="cbs" border="0">
+  </div>
+  <br>
+  <div class="container shadow border rounded p-3 text-center">
+    <p class="h2 text-center"><strong>Visitor Attendance</strong></p>
+    <button type="button" class="btn btn-sm btn-warning" onclick="window.location.href='/guestmanagement/'">Back</button>
+  </div>
+  <br>
+  <div class="container shadow border rounded p-3">
+    <div class="row">
+      <div class="col text-center">        
+        <label for="date_selector">Name: </label>        
+        <input type="text" class="form-control" id="name_filter"  onkeyup="search_function()" placeholder="Guest Name">                     
+      </div>
+      <div class="col text-center">
+        <label for="date_selector">NRIC: </label>        
+        <input type="text" class="form-control" id="nric_filter" onkeyup="search_function()" placeholder="NRIC">
+      </div>      
+      <div class="col text-center">
+        <label for="date_selector">Enter Temperature: </label>        
+        <input class="form-control" id="temperature_filter"  type="number" id="temperature_field" step="0.1" min="0" onkeyup="temperature_function()" placeholder="Enter temperature">
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col">
+      </div>
+      <div class="col text-center">
+        <form class="" method="GET">
+          <label for="date_selector">Date: </label>
+          {% for date in selected_date %}
+          <input type="date" id="date_selector" name="date_selector" value="{{date.date}}">
+          {% endfor %}
+          <button type="submit" class="btn btn-primary "name="button">Submit</button>
+        </form>
+      </div>      
+      <div class="col">
+      </div>
+    </div>
+    <div class="row">
+      <div class="container">
+        <hr/>
+      </div>      
+    </div>
+    <div class="row">
+      <div class="col">        
+      </div>
+      <div class="col text-center"> 
+        <button type="button" id="show_btn" onclick="printDiv()" class="btn btn-warning">Print</button>       
+      </div>
+      <div class="col">        
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="container shadow border rounded p-3">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        {% if message.tags == "error" %}
+        <div class="alert alert-danger alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Error : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% if message.tags == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Success : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% if message.tags == "info" %}
+        <div class="alert alert-info alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Info : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="row">
+      <div class="col" id="table_div">
+          <table class="table" id="guest_list_table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Name</th>
+                <th scope="col">NRIC</th>
+                <th scope="col">Capture Time</th>
+                <th scope="col">Capture Location</th>              
+              </tr>
+            </thead>
+            <tbody>
+              {% for guest in guest_attendance_list %}
+              <tr>
+                <td><img class="shadow rounded img-thumbnail" width="142" height="157" src="{% static guest.img_name %}" alt="myimg"></td>
+                <td>{{guest.name}}</td>
+                <td>{{guest.nric}}</td>
+                <td>{{guest.enter_time}}</td>
+                <td>{{guest.enter_location}}<br>({{guest.enter_temperature}})</td>
+                
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>         
+      </div>
+    </div>
+  </div>
+
+<!-- MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL -->
+<!-- Hidden Form -->
+<form action="/guestmanagement/guestattendance/print/" method="POST" id="hidden_form">
+  {% csrf_token %}
+  <input type="hidden" id="name_hidden" name="name_hidden" value="0">
+  <input type="hidden" id="nric_hidden" name="nric_hidden" value="0">
+  <input type="hidden" id="temperature_hidden" name="temperature_hidden" value="0">
+  <input type="hidden" id="date_hidden" name="date_hidden" value="0">
+  <input type="hidden" id="table_hidden" name="table_hidden" value="0">
+</form>
+<!-- Hidden Form -->
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<script>
+  function printDiv(){
+    
+    document.getElementById("name_hidden").value        = document.getElementById("name_filter").value;
+    document.getElementById("nric_hidden").value        = document.getElementById("nric_filter").value;
+    document.getElementById("temperature_hidden").value = document.getElementById("temperature_filter").value;
+    document.getElementById("date_hidden").value        = document.getElementById("date_selector").value;
+    document.getElementById("table_hidden").value       = document.getElementById("table_div").innerHTML;
+    
+    document.getElementById("hidden_form").submit();
+  }
+
+  function search_function() {
+    // Declare variables
+    var input, filter, ul, li, a, i, txtValue, row_list;
+    input = document.getElementById('name_filter');
+    nric_input = document.getElementById('nric_filter'); 
+
+    filter = input.value.toUpperCase();
+    nric_filter = nric_input.value;
+
+    row_list = document.getElementById('guest_list_table').rows;
+
+    for (i = 1; i < document.getElementById('guest_list_table').rows.length; i++) {
+      document.getElementById('guest_list_table').rows[i].style.display = "";
+    }      
+
+    for (i = 1; i < document.getElementById('guest_list_table').rows.length; i++) {      
+      txtValue = document.getElementById('guest_list_table').rows[i].cells[1].innerHTML;
+      nric_txtValue = document.getElementById('guest_list_table').rows[i].cells[2].innerHTML;      
+      if (txtValue.toUpperCase().indexOf(filter) > -1 && nric_txtValue.indexOf(String(nric_filter)) > -1) {              
+        document.getElementById('guest_list_table').rows[i].style.display = "";
+      } else {
+        document.getElementById('guest_list_table').rows[i].style.display = "none";
+      }
+    }
+  }  
+  
+  function temperature_function(){  
+    filter_value = document.getElementById("temperature_filter"); 
+
+    for (i = 1; i < document.getElementById('guest_list_table').rows.length ; i++) {
+
+      temperature_value = document.getElementById('guest_list_table').rows[i].cells[4].innerHTML;
+      temperature_value = temperature_value.substring(temperature_value.length-5, temperature_value.length-1)
+      selector_name = filter_value.value;
+
+      if(temperature_value >= selector_name){
+        document.getElementById('guest_list_table').rows[i].cells[4].style.color = "#FF0000"
+        document.getElementById('guest_list_table').rows[i].cells[4].style.fontWeight = "900"
+      }
+      else{
+        document.getElementById('guest_list_table').rows[i].cells[4].style.color = ""
+        document.getElementById('guest_list_table').rows[i].cells[4].style.fontWeight = ""
+      }
+    } 
+  }
+  </script>
+
+</body>

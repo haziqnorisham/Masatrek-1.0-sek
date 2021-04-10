@@ -1,0 +1,498 @@
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masatrek Admin Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style media="screen">
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield; /* Firefox */
+    }
+  </style>
+</head>
+<body>
+  <input type="hidden" name="current_stranget_id" id="current_stranger_id" value="{{latest_stranger_id.id}}">
+  <br>
+  <div class="container p-3 text-center">
+    <div class="row">
+      <div class="col">
+        <img src="https://i.ibb.co/BN7M0W3/Whats-App-Image-2019-09-16-at-11-30-13-AM.jpg" class="img-responsive shadow" height="70" alt="cbs" border="0">
+      </div>
+      <div class="col">
+        <p class="h1 text-center mx-auto"><strong><i>Visitor Management</i></strong></p>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="container shadow border rounded p-3 text-center">
+    <div class="row">
+      <div class="col">
+        <h1 id="date_display" style="font-family: courier;" width="135" height="25" ></h1>
+      </div>
+      <div class="col">
+        <p class="h2 text-center"><strong>Visitor Management</strong></p>
+        <button type="button" class="btn btn-sm btn-warning" onclick="window.location.href='/administrator/'">Employee Management</button>
+      </div>
+      <div class="col">
+        <iframe src="http://free.timeanddate.com/clock/i7acgi9u/n122/fn8/fs34/tct/pct/th2" frameborder="0" width="227" height="40" allowTransparency="true"></iframe>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="container shadow border rounded p-3">
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        {% if message.tags == "error" %}
+        <div class="alert alert-danger alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Error : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% if message.tags == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Success : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% if message.tags == "info" %}
+        <div class="alert alert-info alert-dismissible fade show" name="{{ message.tags }}"role="alert">
+          <strong>Info : </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="row text-center mb-3">
+      <div class="col">
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='/guestmanagement/guestlist'">Registered Guest</button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='/guestmanagement/guestattendance'">Visitor List</button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='/guestmanagement/registerguest'">Registration</button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='/time_attendance/stranger'">Stranger List</button>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+    <div class="row text-center mb-3">
+      <div class="col">
+      </div>
+      <div class="col">
+      </div>
+      <div class="col">
+        <a href="{% url 'logout' %}?next=/"><button type="button" class="btn btn-danger btn-block">Logout</button></a>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='/administrator/add_device/'">Add Device</button>
+      </div>
+      <div class="col">
+
+      </div>
+      <div class="col">
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col">
+      </div>
+      <div class="col">
+      </div>
+      <div class="col">
+      </div>
+      <div class="col">
+      </div>
+      <div class="col">
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="container shadow rounded p-3">
+    <div class="row">
+      <div class="col border-botton">
+        <p class="h4 text-center"><strong>Last 3 Visitors of the day</strong></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <img class="shadow rounded mx-auto" width="142" height="157" src="/static/{{latest_strangers.0.image_name}}" alt="myimg" id="img1" name="modal_image2">
+          </div>
+          <div class="col">
+            <div class="row">
+              <p><strong>Capture Time</strong></p>
+            </div>
+            <div class="row">
+              <p id="time1">{{latest_strangers.0.capture_time}}</p>
+            </div>
+            <div class="row">
+              <p><strong>Temperature</strong></p>
+            </div>
+            <div class="row">
+              <p id="temperature1">{{latest_strangers.0.temperature}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <img class="shadow rounded mx-auto" width="142" height="157" src="/static/{{latest_strangers.1.image_name}}" alt="myimg" id="img2" name="modal_image2">
+          </div>
+          <div class="col">
+            <div class="row">
+              <p><strong>Capture Time</strong></p>
+            </div>
+            <div class="row">
+              <p id="time2">{{latest_strangers.1.capture_time}}</p>
+            </div>
+            <div class="row">
+              <p><strong>Temperature</strong></p>
+            </div>
+            <div class="row">
+              <p id="temperature2">{{latest_strangers.1.temperature}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <img class="shadow rounded mx-auto" width="142" height="157" src="/static/{{latest_strangers.2.image_name}}" alt="myimg" id="img3" name="modal_image2">
+          </div>
+          <div class="col">
+            <div class="row">
+              <p><strong>Capture Time</strong></p>
+            </div>
+            <div class="row">
+              <p id="time3">{{latest_strangers.2.capture_time}}</p>
+            </div>
+            <div class="row">
+              <p><strong>Temperature</strong></p>
+            </div>
+            <div class="row">
+              <p id="temperature3">{{latest_strangers.2.temperature}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="container shadow rounded p-3">
+    <div class="row">
+      <div class="col border-bottom">
+        <p class="h4 text-center"><strong>Connected Terminal</strong></p>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col">
+      </div>
+      <div class="col">
+        <form id="connected_terminal" method="POST" action="/guestmanagement/terminal/">
+          {% csrf_token %}
+          <div class="form-group ">
+            {% for terminal in terminal_details %}
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="cb1" name="terminal_ip" value="{{terminal.terminal_ip}}">
+              <label class="form-check-label h6" for="cb1">{{terminal.terminal_name}}</label>
+            </div>
+            <br>
+            {% endfor %}
+          </div>
+        </form>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+    {% if request.user.is_superuser %}
+    <div class="row">
+      <div class="col">
+      </div>
+      <div class="col text-center">
+        <button type="submit" form="connected_terminal" class="btn btn-success btn-block" name="button" value="sync">Synchronize Device</button>
+      </div>
+      <div class="col text-center">
+        <button type="submit" form="connected_terminal" class="btn btn-danger btn-block" name="button" value="del">Delete Device</button>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+    {%endif%}
+  </div>
+  <!-- MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-danger">
+          <h5 class="modal-title" id="exampleModalLabel">Register New Guest</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <img class="shadow rounded mx-auto" width="142" height="157" src="" alt="myimg" id="modal_image_display" name="modal_image">
+                </div>
+                <div class="row">
+                  <label class="mx-auto pt-1" id="modal_time"><b>-</b></label>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label class="mx-auto pt-1">Temperature</label>
+                  </div>
+                  <div class="col">
+                    <label class="mx-auto pt-1" id="modal_temperature_display"><b>-</b></label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-9">
+                <form method="POST" action="/guestmanagement/register_guest_proc_home/">
+                {% csrf_token %}
+                <input type="hidden" name="modal_temperature" id="modal_temperature">
+                <input type="hidden" name="modal_image" id="modal_image">
+                <input type="hidden" name="modal_terminal_id" id="modal_terminal_id">
+                <input type="hidden" name="modal_capture_time" id="modal_capture_time">
+                <div class="row pb-2">
+                  <label for="modal_name" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Name</b></label>
+                  <div class="col-9 p-0">
+                    <input type="text" class="form-control" id="modal_name" name="modal_name" placeholder="Enter Name" required="true">
+                  </div>
+                </div>
+                <div class="row pb-2">
+                  <label for="modal_nric" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>IC N.o</b></label>
+                  <div class="col-9 p-0">
+                    <input type="number" class="form-control" id="modal_nric" name="modal_nric" placeholder="Enter NRIC" required="true" min="0">
+                  </div>
+                </div>
+                <div class="row pb-2">
+                  <label for="modal_phone" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Phone N.o</b></label>
+                  <div class="col-9 p-0">
+                    <input type="number" class="form-control" id="modal_phone" name="modal_phone" placeholder="Enter Phone Number" required="true" min="0">
+                  </div>
+                </div>
+                <div class="row pb-2">
+                    <label for="modal_duration" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Visit Duration</b></label>
+                    <div class="col-9 p-0">
+                      <div class="row">
+                        <div class="col-3">
+                          <input type="number" name="modal_duration" class="form-control" value="" id="modal_duration" placeholder="Enter Duration" required="true">
+                        </div>
+
+                          <label class="col-3 pl-0 pr-2 text-left align-self-center m-0">Hours</label>
+
+                      </div>
+                  </div>
+                </div>
+                <div class="row pb-2">
+                    <label for="modal_comment" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Remark</b></label>
+                    <div class="col-9 p-0">
+                      <input type="text" name="modal_comment" class="form-control" value="" id="modal_comment" placeholder="Enter Remark">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Register Guest</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL-->
+  <!-- MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL-->
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-success">
+          <h5 class="modal-title" id="exampleModalLabel2">Visit Time Expired</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <img class="shadow rounded mx-auto" width="142" height="157" src="" alt="myimg" id="modal_image_display2" name="modal_image2">
+                </div>
+                <div class="row">
+                  <label class="mx-auto pt-1" id="modal_time2"><b>-</b></label>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label class="mx-auto pt-1">Temperature</label>
+                  </div>
+                  <div class="col">
+                    <label class="mx-auto pt-1" id="modal_temperature_display2"><b>-</b></label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-9">
+                <form method="POST" action="/guestmanagement/register_guest_proc_home/">
+                {% csrf_token %}
+                <input type="hidden" name="modal_temperature2" id="modal_temperature2">
+                <input type="hidden" name="modal_image2" id="modal_image2">
+                <input type="hidden" name="modal_terminal_id2" id="modal_terminal_id2">
+                <input type="hidden" name="modal_capture_time2" id="modal_capture_time2">
+                <div class="row pb-2">
+                  <label for="modal_name2" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Name</b></label>
+                  <div class="col-9 p-0">
+                    <input type="text" class="form-control" id="modal_name2" name="modal_name2" placeholder="Enter Name" required="true" readonly>
+                  </div>
+                </div>
+                <div class="row pb-2">
+                  <label for="modal_nric2" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>IC N.o</b></label>
+                  <div class="col-9 p-0">
+                    <input type="number2" class="form-control" id="modal_nric2" name="modal_nric" placeholder="Enter NRIC" required="true" min="0" readonly>
+                  </div>
+                </div>
+                <div class="row pb-2">
+                  <label for="modal_phone2" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Phone N.o</b></label>
+                  <div class="col-9 p-0">
+                    <input type="number" class="form-control" id="modal_phone2" name="modal_phone2" placeholder="Enter Phone Number" required="true" min="0" readonly>
+                  </div>
+                </div>
+                <div class="row pb-2" style="display: none;">
+                    <label for="modal_duration2" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Visit Duration</b></label>
+                    <div class="col-9 p-0">
+                      <div class="row">
+                        <div class="col-3">
+                          <input type="number" name="modal_duration2" class="form-control" value="" id="modal_duration2" placeholder="Enter Duration" required="true">
+                        </div>
+                          <label class="col-3 pl-0 pr-2 text-left align-self-center m-0">Hours</label>
+                      </div>
+                  </div>
+                </div>
+                <div class="row pb-2">
+                    <label for="modal_comment2" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Remark</b></label>
+                    <div class="col-9 p-0">
+                      <input type="text" name="modal_comment2" class="form-control" value="" id="modal_comment2" placeholder="Enter Remark">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Register Guest</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL MODAL-->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script>
+
+    window.onload = function(){
+        set_date()
+        doAjax();
+    }
+
+    function set_date() {
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+      var yyyy = today.getFullYear();
+
+      str1 = document.getElementById("img1").src
+      str2 = document.getElementById("img2").src
+      str3 = document.getElementById("img3").src
+
+      if(str1.substr(str1.length - 3) != "jpg")
+        document.getElementById("img1").style.display = "none"
+      if(str2.substr(str2.length - 3) != "jpg")
+        document.getElementById("img2").style.display = "none"
+      if(str3.substr(str3.length - 3) != "jpg")
+        document.getElementById("img3").style.display = "none"
+        
+      today = dd + '-' + mm + '-' + yyyy;
+      document.getElementById("date_display").innerHTML = today;
+    }
+
+    function doAjax() {
+
+      var username = "test_username"
+      $.ajax({
+        url: '/guestmanagement/ajax_check_new_stranger/',
+        data: {
+          'current_stranger_id': document.getElementById("current_stranger_id").value
+        },
+        dataType: 'json',
+        success: function (data) {
+          console.log( data.new_user );
+          if((data.new_user == 1) && (data.type == 1)){
+            var image_name = "/static/";
+            document.getElementById("current_stranger_id").value = data.user_id;
+            document.getElementById("modal_image_display").src = image_name.concat(data.image_name);
+            document.getElementById("modal_time").innerHTML = data.capture_time;
+            document.getElementById("modal_temperature_display").innerHTML = data.temperature;
+
+            document.getElementById("modal_temperature").value = data.temperature;
+            document.getElementById("modal_image").value = data.image_name;
+            document.getElementById("modal_terminal_id").value = data.capture_location_id;
+            document.getElementById("modal_capture_time").value = data.capture_time;
+
+            $("#exampleModal").modal("show");
+          }
+         else if ((data.new_user == 1) && (data.type == 0)){
+           var image_name = "/static/";
+           document.getElementById("current_stranger_id").value = data.user_id;
+           document.getElementById("modal_image_display2").src = image_name.concat(data.image_name);
+           document.getElementById("modal_time2").innerHTML = data.capture_time;
+           document.getElementById("modal_temperature_display2").innerHTML = data.temperature;
+
+           document.getElementById("modal_name2").value = data.user_name;
+           document.getElementById("modal_nric2").value = data.user_nric;
+           document.getElementById("modal_phone2").value = data.user_phone;
+
+           document.getElementById("modal_temperature2").value = data.temperature;
+           document.getElementById("modal_image2").value = data.image_name;
+           document.getElementById("modal_terminal_id2").value = data.capture_location_id;
+           document.getElementById("modal_capture_time2").value = data.capture_time;
+
+           $("#exampleModal2").modal("show");
+         }
+        },
+        complete: function() {
+          setTimeout(doAjax, 1000);
+        }
+      });
+    }
+
+
+
+  </script>
+</body>

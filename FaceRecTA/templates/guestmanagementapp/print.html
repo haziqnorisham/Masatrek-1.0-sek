@@ -1,0 +1,88 @@
+<head>
+  <br>
+  <br>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    hr.style {
+    	background-color: #fff;
+    	border-top: 2px dashed #8c8b8b;
+    }
+
+    hr.style2 {
+    	background-color: #f7f7f7;
+    }
+
+    img.csb {
+      height:10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container csb">
+    <img src="https://i.ibb.co/BN7M0W3/Whats-App-Image-2019-09-16-at-11-30-13-AM.jpg" class="img-responsive w-25" alt="Responsive image" border="0">
+    <h2>Visitor Attendance Report</h2> 
+    <div class="row">
+      <div class="col">
+        <p style="margin-bottom: 0px;"> Ganerated On : {% now "Y-m-d" %}</p>  
+        <p style="margin-bottom: 0px;"> By : {{ user.get_username }}</p>        
+      </div>   
+  </div>
+  </div>
+  <div class="container">
+    <hr class="style"/>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {% if name == "" %}
+        <p><strong>Guest Name :</strong>    -</p>
+        {% else %}
+        <p><strong>Guest Name :</strong> {{name}}</p>
+        {% endif %}
+      </div>
+      <div class="col">
+        {% if nric == "" %}
+        <p><strong>Guest NRIC :</strong>    -</p>    
+        {% else %}    
+        <p><strong>Guest NRIC :</strong> {{nric}}</p>
+        {% endif %}
+      </div>     
+      <div class="col">        
+        <p><strong>Date :</strong> {{date}}</p>        
+      </div>    
+      <div class="col">
+        <p><strong>Temperature :</strong> {{Temperature}}</p>        
+      </div>              
+    </div>
+  </div>
+  <div class="container">
+    <hr/>
+  </div>
+  <div class="container">
+    {{ table |safe }}
+  </div>
+
+</body>
+
+<script>
+  
+  function load_function() {
+    window.print();
+    window.onafterprint = function(){
+      window.history.back();}
+  }
+
+  window.onload = load_function;
+</script>
+<br>
+<!-- Footer -->
+<footer class="page-footer">
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-1">© 2019 Copyright:
+    <a href="https://www.camartcctv.com"> camartcctv.com</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>

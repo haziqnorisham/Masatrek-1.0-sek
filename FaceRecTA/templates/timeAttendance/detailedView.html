@@ -1,0 +1,77 @@
+<head>
+  <br>
+  <br>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    hr.style {
+    	background-color: #fff;
+    	border-top: 2px dashed #8c8b8b;
+    }
+
+    hr.style2 {
+    	background-color: #f7f7f7;
+    }
+
+    img.csb {
+      height:10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container text-center csb">
+    <img src="https://i.ibb.co/BN7M0W3/Whats-App-Image-2019-09-16-at-11-30-13-AM.jpg" class="img-responsive" alt="Responsive image" border="0">
+    <h2>Time & Attendance System</h2>
+    <button type="button" class="btn btn-warning" onclick="home()">Back</button>
+  </div>
+  <div class="container">
+    <hr class="style"/>
+  </div>
+
+  <div class="container">
+    <table class="table " id="timeTable">
+      <thead>
+        <tr>
+          <th scope="col">Employee ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Capture Time</th>
+          <th scope="col">Capture Location</th>
+          <th scope="col">Temparature</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dat in data %}
+            <tr>
+              <td>{{ dat.id }}</td>
+              <td>{{ dat.name }}</td>
+              <td>{{ dat.capture_time }}</td>
+              <td>{{ dat.capture_location }}</td>
+              <td>{{ dat.temperature }}</td>
+            </tr>
+
+        {% endfor %}
+    </tbody>
+  </table>
+
+
+  <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+  </div>
+
+</body>
+
+<script>
+    function home() {
+      window.history.back()
+    }
+</script>
+<br>
+<!-- Footer -->
+<footer class="page-footer">
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-1">© 2019 Copyright:
+    <a href="https://www.camartcctv.com"> camartcctv.com</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>
