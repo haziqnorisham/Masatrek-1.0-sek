@@ -8,6 +8,7 @@ class EmployeeDetail(models.Model):
     department = models.CharField(max_length=500, null=True)
     branch = models.CharField(max_length=500, null=True)
     status = models.IntegerField()
+    department2 = models.ForeignKey(Departments, default = None, on_delete=models.SET_DEFAULT)
 
 class TerminalDetails(models.Model):
     terminal_id = models.IntegerField(primary_key=True)
@@ -25,3 +26,7 @@ class StrangerDetails(models.Model):
     capture_location = models.ForeignKey(TerminalDetails,default=000000 ,on_delete=models.SET_DEFAULT)
     temperature = models.CharField(max_length=100, default='')
     image_name = models.CharField(max_length=500)
+
+class Departments(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=32)
