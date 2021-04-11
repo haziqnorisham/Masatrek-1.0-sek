@@ -571,6 +571,16 @@ def add_device(requests):
 @login_required
 def employee_list(requests):
 
+    department_dict_list = []
+    department_list = Departments.objects.all()
+
+    for department in department_list:
+        temp_dict = {
+            'id': department.id,
+            'name': department.name
+        }
+        department_dict_list.append(temp_dict)
+
     employee_dict_list = []
     temp = "Female"
 
@@ -598,7 +608,8 @@ def employee_list(requests):
 
 
     context={
-        "employee_list": employee_dict_list
+        "employee_list": employee_dict_list,
+        "department_list": department_dict_list
     }
     return render(requests, "administrator/employee_list.html", context)
 
@@ -768,7 +779,7 @@ def update_employee(requests):
                 employee = EmployeeDetail.objects.get(id = id)
                 employee.name = name
                 employee.gender = int(gender)
-                employee.department = department
+                employee.department = Departments.objects.get(id = department)
                 try:
                     employee.save()
                     messages.success(requests, "Succesfully updated empoyee data!")

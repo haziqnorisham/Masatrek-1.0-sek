@@ -139,7 +139,11 @@
 
                     <label for="modal_name" class="col-3 pl-0 pr-2 text-left align-self-center m-0"><b>Department</b></label>
                     <div class="col-9 p-0">
-                      <input type="text" name="modal_department" class="form-control" value="" id="modal_department">
+                      <select id="modal_department" class="form-control" name="modal_department">
+                        {% for department in department_list %}
+                        <option value={{department.id}}>{{department.name}}</option>              
+                        {% endfor %}
+                      </select>
                   </div>
                 </div>                              
               </div>
@@ -177,8 +181,17 @@
           document.getElementById("modal_image").src = image_name.concat(data.image_name);
           document.getElementById("modal_name").value = data.name;
           document.getElementById("modal_gender").value = data.gender;
-          document.getElementById("modal_department").value = data.department;
           document.getElementById("modal_id").value = data.id;
+          var department_length;
+          department_length = document.getElementById("modal_department").options.length;
+          var department_list;
+          department_list =  document.getElementById("modal_department");
+          for (var i = 0; i < department_length; i++) {
+            if (department_list.options[i].value == data.department) {
+              department_list.options[i].selected = true;
+              return;
+            }
+          }
         },
       });
 
