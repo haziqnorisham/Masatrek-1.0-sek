@@ -44,7 +44,7 @@
           <button type="button" class="btn btn-warning" onclick="home()">Home</button>
         </div>
 
-        <form class="p-3" method="get" action="/administrator/employee_add_process/">
+        <form class="p-3" method="POST" action="/administrator/employee_add_process/">
           {% csrf_token %}
           <div class="form-group">
             Name :
@@ -65,8 +65,7 @@
           </div>
 
           <div class="form-group">
-            Class/Department :
-            <!-- <input class="form-control" placeholder="Class/Department" name="Department" value= "{{ Department }}"> -->            
+            Class/Department :            
             <select id="Department" class="form-control" name="Department">
               {% for department in department_list %}
               <option value={{department.id}}>{{department.name}}</option>              
