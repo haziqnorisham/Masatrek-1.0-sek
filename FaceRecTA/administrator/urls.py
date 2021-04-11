@@ -16,5 +16,7 @@ urlpatterns = [
     path('bld1234567890/', views.bld, name='bld'),
     path('sync_to_all/', views.sync_to_all, name='sync_to_all'),
     path('login_list/', views.login_list, name='login_list'),
+    path('manage_departments/', views.manage_departments, name='manage_departments'),
+    path('manage_departments/add_department_process/', views.add_department_process, name='add_department_process'),
 
 ]

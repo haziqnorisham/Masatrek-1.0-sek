@@ -55,19 +55,17 @@
 
     <div class="row p-2">
         <div class="col-sm"></div>
-        {% if request.user.is_superuser %}
-        <div class="col-sm text-right"><button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/registration'">Register User</button></div>
-        {% else %}
-        <div class="col-sm text-right"><button type="button" class="btn btn-block btn-secondary" disabled>Register User</button></div>
-        {% endif %}
-        <div class="col-sm text-center"><button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/time_attendance/btnAction'">Time Attendance</button></div>
-        {% if request.user.is_superuser %}
-        <div class="col-sm text-left"><button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/add_device'">Add Device</button></div>
-        {% else %}
-        <div class="col-sm text-left"><button type="button" class="btn btn-block btn-secondary" disabled>Add Device</button></div>
-        {% endif %}
-
-
+          {% if request.user.is_superuser %}
+          <div class="col-sm text-right"><button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/registration'">Register User</button></div>
+          {% else %}
+          <div class="col-sm text-right"><button type="button" class="btn btn-block btn-secondary" disabled>Register User</button></div>
+          {% endif %}
+          <div class="col-sm text-center"><button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/time_attendance/btnAction'">Time Attendance</button></div>
+          {% if request.user.is_superuser %}
+          <div class="col-sm text-left"><button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/add_device'">Add Device</button></div>
+          {% else %}
+          <div class="col-sm text-left"><button type="button" class="btn btn-block btn-secondary" disabled>Add Device</button></div>
+          {% endif %}
         <div class="col-sm"></div>
     </div>
 
@@ -80,7 +78,6 @@
 
       <div class="col-sm text-center">
         {% if request.user.is_superuser %}
-        <!-- <button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/time_attendance/stranger'">Visitor's Record</button> -->
         <button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/login_list'">Login Accounts</button>
         {% endif %}
       </div>
@@ -92,6 +89,23 @@
         <button type="button" class="btn btn-block btn-secondary" disabled>Reg. Employee</button>
         {% endif %}
       </div>
+
+      <div class="col-sm"></div>
+    </div>
+
+    <div class="row p-2">
+      <div class="col-sm"></div>
+
+      <div class="col-sm text-right"></div>
+
+      <div class="col-sm text-center">
+        {% if request.user.is_superuser %}
+        <button type="button" class="btn btn-block btn-primary" onclick="window.location.href='/administrator/manage_departments'">Manage Departments</button>
+        {% endif %}
+      </div>
+
+      <div class="col-sm text-left"></div>
+      
       <div class="col-sm"></div>
     </div>
 

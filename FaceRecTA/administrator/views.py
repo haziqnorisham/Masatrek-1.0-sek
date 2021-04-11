@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required, user_passes_test
-from timeAttendance.models import EmployeeDetail, TerminalDetails, EmployeeAttendance, StrangerDetails
+from timeAttendance.models import EmployeeDetail, TerminalDetails, EmployeeAttendance, StrangerDetails, Departments
 from guestmanagementapp.models import GuestDetails, GuestAttendance
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
@@ -875,3 +875,52 @@ def login_list(requests):
         }
 
     return render(requests, "administrator/login_list.html", context)
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def manage_departments(requests):
+
+    # To-Do : Error message when no department found.
+    department_list = Departments.objects.all()
+    department_dict_list = []
+
+    if len(department_list) > 0:
+        for department in department_list:
+
+            department_dict = {
+                        "id": department.id,
+                        "name": department.name
+            }
+
+            department_dict_list.append(department_dict)
+
+        context={
+            "department_list": department_dict_list
+        }
+
+        return render(requests, "administrator/manage_departments.html", context)
+    else:
+        messages.error(requests, "No departments found")
+        return render(requests, "administrator/manage_departments.html")
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def add_department_process(requests):
+
+    # To-Do : Check for duplicate department names.
+
+    if requests.method == 'POST':  
+      
+        data = requests.POST.copy()        
+
+        department = Departments()
+        department.name = str(data.get("Department_Name"))
+        department.save()
+        messages.success(requests, 'New department saved.')
+
+    else:
+        i=None
+        # To-Do : redirect with erorr message
+    
+    response = redirect('/administrator/manage_departments')
+    return response
