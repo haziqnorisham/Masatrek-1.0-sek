@@ -19,5 +19,6 @@ urlpatterns = [
     path('manage_departments/', views.manage_departments, name='manage_departments'),
     path('manage_departments/add_department_process/', views.add_department_process, name='add_department_process'),
     path('manage_departments/delete_department_process/', views.delete_department_process, name='delete_department_process'),
+    path('manage_departments/edit_department_process/', views.edit_department_process, name='edit_department_process'),
 
 ]

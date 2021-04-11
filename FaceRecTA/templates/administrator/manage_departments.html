@@ -72,7 +72,7 @@
                                     {% csrf_token %}
                                     <td>
                                         <button type="button" class="btn btn-danger pb-2" id="delete-{{department.id}}" value="{{department.name}}" data-toggle="modal" data-target="#Delete_Department_Modal" onclick="delete_department(this)">Delete</button>                    
-                                        <button type="button" class="btn btn-warning" name="employee_id" value="{{employee.employee_id}}" onclick="edit(this)" data-toggle="modal" data-target="#exampleModal">Edit</button>
+                                        <button type="button" class="btn btn-warning" id="edit-{{department.id}}" value="{{department.name}}" onclick="edit_department(this)" data-toggle="modal" data-target="#Edit_Department_Modal">Edit</button>
                                     </td>
                                 </form>                                
                             </tr>
@@ -141,7 +141,37 @@
             </div>
             </div>
         </div>
-        <!-- Delete Department Modal End -->        
+        <!-- Delete Department Modal End -->   
+        
+        <!-- Edit Department Modal Start -->
+        <div class="modal fade" id="Edit_Department_Modal" tabindex="-1" role="dialog" aria-labelledby="Edit_Department_Modal_Title" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit Department</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form id="Edit_Department_Form" method="POST" action="/administrator/manage_departments/edit_department_process/">
+                        {% csrf_token %}
+                        <div class="form-group" method="GET">
+                          <label for="Department_Name">Department Name</label>
+                          <input type="text" class="form-control" id="Department_Name_Edit_Input" name="Department_Name" placeholder="Enter Department Name" required>
+                          <input type="hidden" id="Edit_Department_Id" name="Edit_Department_Id" value="">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" form="Edit_Department_Form" class="btn btn-primary">Save Department Edit</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- Edit Department Modal End -->
+
         <script>
             function home() {
               location.replace("/administrator")
@@ -156,6 +186,17 @@
 
                 hidden_delete_input = document.getElementById("Delete_Department_Id")
                 hidden_delete_input.value = click.id.slice(click.id.lastIndexOf('-') + 1)
+            }
+            
+            function edit_department(click){
+                var department_name_input
+                var hiddne_edit_input
+
+                department_name_input = document.getElementById("Department_Name_Edit_Input")
+                department_name_input.value = click.value
+
+                hiddne_edit_input = document.getElementById("Edit_Department_Id")
+                hiddne_edit_input.value = click.id.slice(click.id.lastIndexOf('-') + 1)
             }
         </script>
     </body>
