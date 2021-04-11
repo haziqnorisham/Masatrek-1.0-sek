@@ -321,6 +321,16 @@ def sync(requests):
 @user_passes_test(lambda u: u.is_superuser)
 def employee_add(requests):
 
+    department_dict_list = []
+    department_list = Departments.objects.all()
+
+    for department in department_list:
+        temp_dict = {
+            'id': department.id,
+            'name': department.name
+        }
+        department_dict_list.append(temp_dict)
+
     registered = {"registered" : False}
     get_img_name = ''
     if requests.method == 'GET' and 'img_name' in requests.GET:
@@ -337,7 +347,8 @@ def employee_add(requests):
     context= {
         'image': temp_list,
         'registered' : registered,
-        'image_name': get_img_name
+        'image_name': get_img_name,
+        'department_list': department_dict_list
         }
 
     return render(requests, "administrator/employee_add.html", context)
