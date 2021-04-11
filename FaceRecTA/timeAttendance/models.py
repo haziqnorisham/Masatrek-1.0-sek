@@ -1,5 +1,9 @@
 from django.db import models
 
+class Departments(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=32)
+
 class EmployeeDetail(models.Model):
     id = models.CharField(primary_key=True, max_length=500)
     name = models.CharField(max_length=32)
@@ -26,7 +30,3 @@ class StrangerDetails(models.Model):
     capture_location = models.ForeignKey(TerminalDetails,default=000000 ,on_delete=models.SET_DEFAULT)
     temperature = models.CharField(max_length=100, default='')
     image_name = models.CharField(max_length=500)
-
-class Departments(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=32)
