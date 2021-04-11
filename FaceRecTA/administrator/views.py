@@ -385,7 +385,7 @@ def employee_add_process(requests):
                     emp.gender = 1
 
                 emp.image_name = data.get("img_name")
-                emp.department = data.get("Department")
+                emp.department = Departments.objects.get(id = data.get("Department"))
                 emp.branch = data.get("Branch")
                 #status should always be set to zero and only zero, should be changed, stupid decision from previous design
                 emp.status = 0
@@ -590,7 +590,7 @@ def employee_list(requests):
                     "gender": temp,
                     "img_name": employee.image_name,
                     "branch": employee.branch,
-                    "department": employee.department
+                    "department": employee.department.name
         }
 
         if(employee.status == 0):
