@@ -924,3 +924,22 @@ def add_department_process(requests):
     
     response = redirect('/administrator/manage_departments')
     return response
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def delete_department_process(requests):
+
+    if requests.method == 'POST':  
+      
+        data = requests.POST.copy()        
+
+        department = Departments.objects.get(id = data.get("Delete_Department_Id"))
+        department.delete()
+        messages.success(requests, 'Department deleted.')
+
+    else:
+        i=None
+        # To-Do : redirect with erorr message
+    
+    response = redirect('/administrator/manage_departments')
+    return response

@@ -63,20 +63,20 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for department in department_list %}
                             <tr>
-                                {% for department in department_list %}
                                 <td>{{forloop.counter}}</td>
                                 <td>{{department.id}}</td>
                                 <td>{{department.name}}</td>                                
                                 <form class=""  method="POST" action="">
                                     {% csrf_token %}
                                     <td>
-                                        <button type="submit" class="btn btn-danger pb-2" name="employee_id" value="{{employee.employee_id}}">Delete</button>                    
+                                        <button type="button" class="btn btn-danger pb-2" id="delete-{{department.id}}" value="{{department.name}}" data-toggle="modal" data-target="#Delete_Department_Modal" onclick="delete_department(this)">Delete</button>                    
                                         <button type="button" class="btn btn-warning" name="employee_id" value="{{employee.employee_id}}" onclick="edit(this)" data-toggle="modal" data-target="#exampleModal">Edit</button>
                                     </td>
-                                </form>
-                                {% endfor %}
+                                </form>                                
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
 
@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        <!-- Modal Start -->
+        <!-- Add Department Modal Start -->
         <div class="modal fade" id="Add_Department_Modal" tabindex="-1" role="dialog" aria-labelledby="Add_Department_Modal_Title" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -115,10 +115,47 @@
             </div>
             </div>
         </div>
-        <!-- Modal End -->
+        <!-- Add Department Modal End -->
+
+        <!-- Delete Department Modal Start -->
+        <div class="modal fade" id="Delete_Department_Modal" tabindex="-1" role="dialog" aria-labelledby="Delete_Department_Modal_Title" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Warning</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <h6 id="delete_message_modal"></h6>
+                    <form id="Delete_Department_Form" method="POST" action="/administrator/manage_departments/delete_department_process/">
+                        {% csrf_token %}
+                        <input type="hidden" id="Delete_Department_Id" name="Delete_Department_Id" value="">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-danger" form="Delete_Department_Form">Delete Department</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- Delete Department Modal End -->        
         <script>
             function home() {
               location.replace("/administrator")
+            }
+
+            function delete_department(click){
+                var delete_message
+                var hidden_delete_input
+
+                delete_message = document.getElementById("delete_message_modal")
+                delete_message.innerHTML = "Are your sure you want to delete \"" + click.value + "\" department? Employees in this department will be set to \"No Department\""
+
+                hidden_delete_input = document.getElementById("Delete_Department_Id")
+                hidden_delete_input.value = click.id.slice(click.id.lastIndexOf('-') + 1)
             }
         </script>
     </body>
