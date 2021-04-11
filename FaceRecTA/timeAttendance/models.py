@@ -12,7 +12,7 @@ class EmployeeDetail(models.Model):
     department = models.CharField(max_length=500, null=True)
     branch = models.CharField(max_length=500, null=True)
     status = models.IntegerField()
-    department2 = models.ForeignKey(Departments, default = None, on_delete=models.SET_DEFAULT)
+    department2 = models.ForeignKey(Departments, default = None, on_delete=models.SET_DEFAULT, null=True)
 
 class TerminalDetails(models.Model):
     terminal_id = models.IntegerField(primary_key=True)
