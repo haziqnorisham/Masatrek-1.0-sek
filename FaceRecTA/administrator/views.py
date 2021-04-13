@@ -14,6 +14,7 @@ from timeAttendance.models import EmployeeDetail, TerminalDetails, EmployeeAtten
 from guestmanagementapp.models import GuestDetails, GuestAttendance
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from datetime import date, datetime, timedelta
 
 def exist_in_any_terminal(employee_id):
     terminal_details_object_list = TerminalDetails.objects.all()
@@ -128,7 +129,15 @@ def get_all_employee_id():
 def home(requests):
 
     terminal_dict_list = []
+    
+    attendance_list = EmployeeAttendance.objects.values('EmployeeDetail').filter(capture_time__contains = str(date.today())).distinct()
+    
+    employee_list = EmployeeDetail.objects.all()
 
+    if (len(attendance_list) == 0 or len(employee_list) == 0):
+        percentage = 0
+    else:
+        percentage = (len(attendance_list)/len(employee_list)) * 100
 
     terminal_obj_list = TerminalDetails.objects.all()
     for index,terminal_obj in enumerate(terminal_obj_list):
@@ -138,7 +147,11 @@ def home(requests):
 
 
     context= {
-        "terminal_dict_list" : terminal_dict_list
+        "terminal_dict_list" : terminal_dict_list,
+        "total_attendance" : str(len(attendance_list)),
+        "total_employees" : str(len(employee_list)),
+        "attendance_percentage" : str(percentage),
+        "date" : str(date.today().strftime("%A, %d/%m/%Y"))
         }
 
     return render(requests, "administrator/administrator_home.html", context)
