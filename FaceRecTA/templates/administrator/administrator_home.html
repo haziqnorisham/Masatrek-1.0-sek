@@ -71,6 +71,26 @@
             <p>{{total_employees}}</p>
           </div>   
         </div>
+        <div class="row">
+          <div class="col">
+            <table class="table">
+              <thead>
+                <tr>                  
+                  <th scope="col">Department Name</th>
+                  <th scope="col">Attendance</th>                  
+                </tr>
+              </thead>
+              <tbody>
+                {% for department in department_list %}
+                <tr>
+                  <td>{{department.name}}</td>
+                  <td>{{department.attendance}}/{{department.total_emp}} ({{department.percentage}}%)</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 

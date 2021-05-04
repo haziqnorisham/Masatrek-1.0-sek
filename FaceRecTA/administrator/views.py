@@ -145,13 +145,44 @@ def home(requests):
         temp_model["counter"] = index
         terminal_dict_list.append(temp_model)
 
+    # To-Do : Error message when no department found.
+    department_list = Departments.objects.all()
+    department_dict_list = []
+
+    if len(department_list) > 0:
+        for department in department_list:
+            
+            department_attendance_list = EmployeeAttendance.objects.values('EmployeeDetail').filter(capture_time__contains = str(date.today()), EmployeeDetail__department = department.id).distinct()
+            total_staff_in_department = EmployeeDetail.objects.values('id').filter(department = department.id)
+            
+            if (len(department_attendance_list) == 0 or len(total_staff_in_department) == 0):
+                percentage2 = 0
+            else:
+                percentage2 = (len(department_attendance_list)/len(total_staff_in_department)) * 100
+            
+            # debug code
+            # print("department_name : " + department.name)
+            # print("department_id : " + str(department.id))
+            # print("attendance : " + str(len(department_attendance_list)))
+            # print()
+
+            department_dict = {
+                        "id": department.id,
+                        "name": department.name,
+                        "attendance" : str(len(department_attendance_list)),
+                        "total_emp" : str(len(total_staff_in_department)),
+                        "percentage" : str(percentage2)
+            }
+
+            department_dict_list.append(department_dict)
 
     context= {
         "terminal_dict_list" : terminal_dict_list,
         "total_attendance" : str(len(attendance_list)),
         "total_employees" : str(len(employee_list)),
         "attendance_percentage" : str(percentage),
-        "date" : str(date.today().strftime("%A, %d/%m/%Y"))
+        "date" : str(date.today().strftime("%A, %d/%m/%Y")),
+        "department_list" : department_dict_list
         }
 
     return render(requests, "administrator/administrator_home.html", context)
